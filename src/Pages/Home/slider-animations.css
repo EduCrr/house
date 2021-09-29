@@ -1,0 +1,186 @@
+.slider,
+.slide {
+  width: 100% !important;
+  height: 100vh !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+.sliderText {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  height: inherit;
+}
+.sliderText h1 {
+  font-size: 70px !important;
+
+  color: white;
+}
+.slide h1 {
+  transition: all 0.3s ease;
+  -webkit-transform: translateY(-20px);
+  transform: translateY(-20px);
+  opacity: 0;
+}
+.previousButton,
+.nextButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  margin: 0 25px;
+  text-indent: -9999px;
+  cursor: pointer;
+  filter: invert(100%);
+}
+.nextButton {
+  background: url("https://img.icons8.com/ios-glyphs/30/000000/chevron-right.png")
+    no-repeat center center / 32px;
+  text-shadow: 4px 4px 9px #1f1f1f;
+}
+
+.previousButton {
+  background: url("https://img.icons8.com/ios-glyphs/30/000000/chevron-left.png")
+    no-repeat center center / 32px;
+  text-shadow: 4px 4px 9px #1f1f1f;
+}
+.arrowBtn {
+  filter: invert(100%);
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+.slide button {
+  transition: all 0.3s ease;
+  -webkit-transform: translateY(20px);
+  transform: translateY(20px);
+  opacity: 0;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.slide p {
+  color: white !important;
+  transition: all 0.3s ease;
+  -webkit-transform: translateY(20px);
+  transform: translateY(20px);
+  opacity: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.slide section * {
+  transition: all 0.5s ease;
+}
+
+.slide section img {
+  -webkit-transform: translateX(-50px);
+  transform: translateX(-50px);
+  opacity: 0;
+}
+
+.slide section span {
+  -webkit-transform: translateY(-10px);
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.slide section span strong {
+  -webkit-transform: translateY(10px);
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+.slide.animateIn.previous h1,
+.slide.current h1,
+.slide.animateIn.next h1,
+.slide.animateIn.previous button,
+.slide.current button,
+.slide.animateIn.next button,
+.slide.animateIn.previous p,
+.slide.current p,
+.slide.animateIn.next p,
+.slide.animateIn.previous section *,
+.slide.current section *,
+.slide.animateIn.next section * {
+  text-shadow: 4px 4px 9px #1f1f1f;
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+  -webkit-transition-delay: 0.9s;
+  transition-delay: 0.9s;
+  opacity: 1;
+}
+
+.slide.animateIn.previous p,
+.slide.animateIn.next p {
+  -webkit-transition-delay: 1.1s;
+  transition-delay: 1.1s;
+}
+
+.slide.animateIn.previous button,
+.slide.animateIn.next button {
+  -webkit-transition-delay: 1.3s;
+  transition-delay: 1.3s;
+}
+
+.slide.animateIn.previous section img,
+.slide.animateIn.next section img {
+  -webkit-transition-delay: 1.7s;
+  transition-delay: 1.7s;
+}
+
+.slide.animateIn.previous section span,
+.slide.animateIn.next section span {
+  -webkit-transition-delay: 1.4s;
+  transition-delay: 1.4s;
+}
+
+.slide.animateIn.previous section span strong,
+.slide.animateIn.next section span strong {
+  -webkit-transition-delay: 1.5s;
+  transition-delay: 1.5s;
+}
+
+.slide.animateOut h1 {
+  -webkit-transition-delay: 0.3s;
+  transition-delay: 0.3s;
+}
+
+.slide.animateOut p {
+  -webkit-transition-delay: 0.2s;
+  transition-delay: 0.2s;
+}
+
+.slide.animateOut section span {
+  -webkit-transition-delay: 0.1s;
+  transition-delay: 0.1s;
+}
+
+.slide.animateOut section span strong {
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+}
+
+@media (max-width: 1024px) {
+  .sliderText h1 {
+    font-size: 50px !important;
+  }
+}
+@media (max-width: 425px) {
+  .sliderText {
+    align-items: center !important;
+  }
+  .sliderText h1 {
+    font-size: 35px !important;
+  }
+  .slider a.previousButton,
+  .slider a.nextButton {
+    display: none;
+  }
+}
