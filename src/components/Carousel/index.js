@@ -67,7 +67,7 @@ export default () => {
             <div className="carouselCenter" key={k}>
               <Link to={`house/${item.id}`}>
                 <div className="imgHover">
-                  <img src={item.images} />
+                  <img alt="" src={item.images} />
                   <div className="middle">
                     <div className="text">Veja mais</div>
                   </div>

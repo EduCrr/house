@@ -1,11 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { RegisterArea } from "./style";
 import Menu from "../../components/Menu";
-import { AuthContext } from "../../contexts/auth";
+//import { AuthContext } from "../../contexts/auth";
 import firebase from "../../firebaseConnection";
 import Footer from "../../components/Footer";
 export default () => {
-  const { user } = useContext(AuthContext);
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
   const [cidade, setCidade] = useState("");
@@ -124,7 +123,7 @@ export default () => {
             placeholder="Tamanho"
             type="text"
           />
-          <label for="arquivo">Enviar arquivos</label>
+          <label htmlFor="arquivo">Enviar arquivos</label>
           <input
             onChange={handlePhotos}
             type="file"
@@ -132,7 +131,11 @@ export default () => {
             accept="image/*"
           />
           {image !== null && (
-            <img style={{ width: "220px", height: "220px" }} src={showImage} />
+            <img
+              alt=""
+              style={{ width: "220px", height: "220px" }}
+              src={showImage}
+            />
           )}
           <textarea
             value={descricao}

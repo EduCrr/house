@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ContatoArea } from "./style";
 import Menu from "../../components/Menu";
 import Footer from "../../components/Footer";

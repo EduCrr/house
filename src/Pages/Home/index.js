@@ -55,6 +55,7 @@ export default () => {
                     <button>
                       {item.button}
                       <img
+                        alt=""
                         className="arrowBtn"
                         src="https://img.icons8.com/ios-glyphs/30/000000/chevron-right.png"
                       />

@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { LoginArea } from "./style";
 import Menu from "../../components/Menu";
 import { AuthContext } from "../../contexts/auth";
-import firebase from "../../firebaseConnection";
 export default () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");

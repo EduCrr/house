@@ -36,6 +36,7 @@ export default ({ ativo }) => {
         </MenuLogo>
         <MenuIcon>
           <img
+            alt=""
             style={{
               filter:
                 window.scrollY === 0 && ativo ? "invert(100)" : "invert(0)",
@@ -54,6 +55,7 @@ export default ({ ativo }) => {
         >
           <div className="overlay-content">
             <img
+              alt=""
               onClick={handleMenu}
               src="https://img.icons8.com/ios-filled/30/000000/multiply.png"
             />

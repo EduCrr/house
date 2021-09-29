@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { HouseArea } from "./style";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Menu from "../../components/Menu";
-import { useForm } from "react-hook-form";
+//import { useForm } from "react-hook-form";
 import Footer from "../../components/Footer";
 import Firebase from "../../firebaseConnection";
 import Formulario from "../../components/Formulario";
@@ -26,7 +26,7 @@ export default () => {
         });
     }
     loadHouse();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,13 +48,14 @@ export default () => {
               </a>
             </div>
             <div className="col-xl-8">
-              <img src={house.images} />
+              <img alt="" src={house.images} />
             </div>
           </div>
           <div className="descricao">
             <div className="row">
               <div className="col-xl-4  mb-5">
                 <img
+                  alt=""
                   style={{ width: "300px", height: "auto" }}
                   src="/assets/planta.jpg"
                 />
@@ -76,7 +77,7 @@ export default () => {
                   <strong>Preço:</strong> {house.preco}
                 </p>
                 <p>
-                  <strong>Banheiros</strong> {house.banheiro}
+                  <strong>Banheiros:</strong> {house.banheiro}
                 </p>
                 <p>
                   <strong>Dorms:</strong> {house.quartos}

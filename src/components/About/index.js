@@ -15,7 +15,7 @@ export default () => {
               </h1>
             </div>
             <div className="col-xl-4 about">
-              <img src="/assets/about.jpg" />
+              <img alt="" src="/assets/about.jpg" />
               <div className="tarjaImg">
                 <p>Último projeto</p>
                 <Link to="/houses">
@@ -26,14 +26,14 @@ export default () => {
           </div>
           <div className="row">
             <div className="col-xl-8 about">
-              <img src="/assets/interior.jpg" />
+              <img alt="" src="/assets/interior.jpg" />
               <div className="tarjaImg">
                 <p>Nossos Produtos</p>
                 <h2>Designer de interior</h2>
               </div>
             </div>
             <div className="col-xl-4 about">
-              <img src="/assets/about3.jpg" />
+              <img alt="" src="/assets/about3.jpg" />
               <div className="tarjaImg">
                 <p>Nossos Serviços</p>
                 <h2>Solução para seus sonhos!</h2>

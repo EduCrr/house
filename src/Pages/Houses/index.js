@@ -102,7 +102,7 @@ export default () => {
             {houses.map((item, k) => (
               <div key={k} className="col-xl-4 houses">
                 <div className="imgHover">
-                  <img src={item.images} />
+                  <img alt="" src={item.images} />
                   <div className="middle">
                     <Link to={`house/${item.id}`} className="text">
                       Veja mais
