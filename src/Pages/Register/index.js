@@ -39,7 +39,7 @@ export default () => {
         let img = url;
         await firebase
           .firestore()
-          .collection("produtos")
+          .collection("teste")
           .add({
             nome,
             categoria,

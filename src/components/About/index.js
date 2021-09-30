@@ -4,7 +4,6 @@ import { AboutArea } from "./style";
 export default () => {
   return (
     <>
-      aaaaaaa
       <AboutArea>
         <div className="container">
           <div className="row">
