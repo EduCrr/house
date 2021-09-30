@@ -13,62 +13,76 @@ export default () => {
   const [banheiro, setBanheiro] = useState("");
   const [quartos, setQuartos] = useState("");
   const [tamanho, setTamanho] = useState("");
-  const [image, setImage] = useState(null);
-  const [showImage, setShowImage] = useState(null);
+  const [image, setImage] = useState([]);
   const [descricao, setDescricao] = useState("");
-
   const handlePhotos = (e) => {
-    let selectedFile = e.target.files[0];
-    setShowImage(URL.createObjectURL(e.target.files[0]));
-    if (selectedFile) {
-      setImage(selectedFile);
-    } else {
-      setImage(null);
+    for (let i = 0; i < e.target.files.length; i++) {
+      setImage((image) => [...image, e.target.files[i]]);
     }
+    console.log(image);
   };
 
-  async function handleRegister(e) {
-    e.preventDefault();
-    await firebase.storage().ref(`imagens/${image.name}`).put(image);
-    await firebase
-      .storage()
-      .ref("imagens")
-      .child(image.name)
-      .getDownloadURL()
-      .then(async (url) => {
-        let img = url;
-        await firebase
-          .firestore()
-          .collection("teste")
-          .add({
-            nome,
-            categoria,
-            preco,
-            cidade,
-            bairro,
-            banheiro,
-            quartos,
-            tamanho,
-            images: img,
-            descricao,
-          })
-          .then(() => {
-            setNome("");
-            setCategoria("");
-            setCidade("");
-            setPreco("");
-            setBairro("");
-            setBanheiro("");
-            setQuartos("");
-            setTamanho("");
-            setImage(null);
-            setDescricao("");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
-  }
+  const handleRegister = async (e) => {
+    e.preventDefault(); // prevent page refreshing
+    const promises = [];
+    image.forEach((img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref()
+        .child(`teste/${img.name}`)
+        .put(img);
+      promises.push(uploadTask);
+      uploadTask.on(
+        firebase.storage.TaskEvent.STATE_CHANGED,
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          if (snapshot.state === firebase.storage.TaskState.RUNNING) {
+            console.log(`Progress: ${progress}%`);
+          }
+        },
+        (error) => console.log(error.code),
+        async () => {
+          const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+          console.log(downloadURL);
+          firebase
+            .firestore()
+            .collection("testes")
+            .add({
+              nome,
+              categoria,
+              preco,
+              cidade,
+              bairro,
+              banheiro,
+              quartos,
+              tamanho,
+              images: firebase.firestore.FieldValue.arrayUnion(downloadURL),
+              descricao,
+            })
+            .then(() => {
+              setNome("");
+              setCategoria("");
+              setCidade("");
+              setPreco("");
+              setBairro("");
+              setBanheiro("");
+              setQuartos("");
+              setTamanho("");
+              setImage([]);
+              setDescricao("");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      );
+    });
+    Promise.all(promises)
+      .then(() => alert("All files uploaded"))
+      .catch((err) => console.log(err.code));
+  };
+
   return (
     <>
       <Menu />
@@ -129,14 +143,16 @@ export default () => {
             type="file"
             id="arquivo"
             accept="image/*"
+            multiple
           />
-          {image !== null && (
-            <img
-              alt=""
-              style={{ width: "220px", height: "220px" }}
-              src={showImage}
-            />
-          )}
+          {image !== null &&
+            image.map((item, k) => (
+              <img
+                alt=""
+                style={{ width: "220px", height: "220px" }}
+                src={item}
+              />
+            ))}
           <textarea
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
@@ -151,5 +167,68 @@ export default () => {
 };
 
 /*
+ const handlePhotos = (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImage((image) => [...image, e.target.result]);
+      };
+      reader.readAsDataURL(e.target.files[i]);
+    }
+    console.log(image);
+  };
+ const handlePhotos = (e) => {
+    let selectedFile = e.target.files[0];
+    setShowImage(URL.createObjectURL(e.target.files[0]));
+    if (selectedFile) {
+      setImage(selectedFile);
+    } else {
+      setImage(null);
+    }
+  };
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    await firebase.storage().ref(`imagens/${image.name}`).put(image);
+    await firebase
+      .storage()
+      .ref("imagens")
+      .child(image.name)
+      .getDownloadURL()
+      .then(async (url) => {
+        let img = url;
+        await firebase
+          .firestore()
+          .collection("teste")
+          .add({
+            nome,
+            categoria,
+            preco,
+            cidade,
+            bairro,
+            banheiro,
+            quartos,
+            tamanho,
+            images: img,
+            descricao,
+          })
+          .then(() => {
+            setNome("");
+            setCategoria("");
+            setCidade("");
+            setPreco("");
+            setBairro("");
+            setBanheiro("");
+            setQuartos("");
+            setTamanho("");
+            setImage(null);
+            setDescricao("");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      });
+  }
+
 https://softauthor.com/learn-firebase-cloud-storage-quickly-guide/
 */
