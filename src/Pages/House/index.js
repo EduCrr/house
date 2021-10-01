@@ -6,8 +6,28 @@ import Menu from "../../components/Menu";
 import Footer from "../../components/Footer";
 import Firebase from "../../firebaseConnection";
 import Formulario from "../../components/Formulario";
-import Houses from "../Houses";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+
 export default () => {
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 0 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 700, min: 0 },
+      items: 1,
+    },
+  };
   const { id } = useParams();
   //const { register, handleSubmit, errors } = useForm();
   const [house, setHouse] = useState({});
@@ -16,7 +36,7 @@ export default () => {
   useEffect(() => {
     async function loadHouse() {
       await Firebase.firestore()
-        .collection("testes")
+        .collection("houses")
         .doc(id)
         .get()
         .then((doc) => {
@@ -50,10 +70,20 @@ export default () => {
                 Faça uma oferta
               </a>
             </div>
+
             <div className="col-xl-8">
-              {imgs.map((item, k) => (
-                <img alt="" src={item} />
-              ))}
+              <Carousel
+                centerMode={false}
+                transitionDuration={700}
+                containerClass="carousel-container"
+                infinite={true}
+                responsive={responsive}
+                dotListClass="custom-dot-list-style"
+              >
+                {imgs.map((item, k) => (
+                  <img alt="" src={item} />
+                ))}
+              </Carousel>
             </div>
           </div>
           <div className="descricao">

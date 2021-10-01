@@ -15,7 +15,6 @@ export default () => {
   ];
 
   async function updateState(snapshot) {
-    //entao é vazio true
     let isCollentionEmpty = snapshot.size === 0;
     if (!isCollentionEmpty) {
       let lista = [];
@@ -35,7 +34,7 @@ export default () => {
   async function loadHouses() {
     setAtivo(0);
     await Firebase.firestore()
-      .collection("testes")
+      .collection("houses")
       .get()
       .then((snapshot) => {
         updateState(snapshot);
@@ -51,7 +50,7 @@ export default () => {
 
   async function handleSearchEach(busca) {
     await Firebase.firestore()
-      .collection("produtos")
+      .collection("houses")
       .where("categoria", "==", busca)
       .get()
       .then((snapshot) => {

@@ -1,12 +1,10 @@
 import React, { useState, useContext } from "react";
 import { RegisterArea } from "./style";
 import Menu from "../../components/Menu";
-import { AuthContext } from "../../contexts/auth";
+//import { AuthContext } from "../../contexts/auth";
 import firebase from "../../firebaseConnection";
 import Footer from "../../components/Footer";
 export default () => {
-  const { user } = useContext(AuthContext);
-
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
   const [cidade, setCidade] = useState("");
@@ -18,28 +16,34 @@ export default () => {
   const [image, setImage] = useState([]);
   const [url, setUrl] = useState([]);
   const [descricao, setDescricao] = useState("");
+  const [slug, setSlug] = useState("");
 
-  let date = Date.now();
+  let date = Date.now().toString().substr(-4);
 
   const handlePhotos = (e) => {
-    for (let i = 0; i < e.target.files.length; i++) {
-      setImage((image) => [...image, e.target.files[i]]);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setUrl((image) => [...image, e.target.result]);
-      };
-      reader.readAsDataURL(e.target.files[i]);
+    if (e.target.files) {
+      for (let i = 0; i < e.target.files.length; i++) {
+        setImage((image) => [...image, e.target.files[i]]);
+        console.log(e.target.files);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setUrl((image) => [...image, e.target.result]);
+        };
+        reader.readAsDataURL(e.target.files[i]);
+      }
+    } else {
+      alert("Sem imagens");
     }
-    console.log(image);
+    setSlug(e.target.files[0].name.replace(".jpg", ""));
   };
 
   async function handleRegister(e) {
     e.preventDefault();
-    if (image) {
+    if (nome !== "") {
       await firebase
         .firestore()
-        .collection("testes")
-        .doc(`c-${date}`)
+        .collection("houses")
+        .doc(`${slug}-${date}`)
         .set({
           nome,
           categoria,
@@ -51,7 +55,8 @@ export default () => {
           tamanho,
           images: [],
           descricao,
-        })
+        });
+      handleUploadStorage()
         .then(() => {
           setNome("");
           setCategoria("");
@@ -63,21 +68,23 @@ export default () => {
           setTamanho("");
           setImage([]);
           setDescricao("");
-          handleUploadStorage();
           setUrl([]);
         })
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      alert("preencha...");
     }
   }
+
   const handleUploadStorage = async () => {
     const promises = [];
     image.forEach((img) => {
       const uploadTask = firebase
         .storage()
         .ref()
-        .child(`teste/${img.name}`)
+        .child(`imagens/${img.name}`)
         .put(img);
       promises.push(uploadTask);
       uploadTask.on(
@@ -95,8 +102,8 @@ export default () => {
           console.log(downloadURL);
           firebase
             .firestore()
-            .collection("testes")
-            .doc(`c-${date}`)
+            .collection("houses")
+            .doc(`${slug}-${date}`)
             .update({
               images: firebase.firestore.FieldValue.arrayUnion(downloadURL),
             });
@@ -104,7 +111,7 @@ export default () => {
       );
     });
     Promise.all(promises)
-      .then(() => alert("All files uploaded"))
+      .then(() => alert("Casa cadastrada com sucesso!"))
       .catch((err) => console.log(err.code));
   };
 
@@ -170,14 +177,15 @@ export default () => {
             accept="image/*"
             multiple
           />
-          {image !== null &&
-            url.map((item, k) => (
-              <img
-                alt=""
-                style={{ width: "220px", height: "220px" }}
-                src={item}
-              />
-            ))}
+          {image !== null && (
+            <div className="preImagesContent col-md-12">
+              {url.map((item, k) => (
+                <>
+                  <img className="preImages" key={k} alt="" src={item} />
+                </>
+              ))}
+            </div>
+          )}
           <textarea
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}

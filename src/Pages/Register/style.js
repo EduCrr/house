@@ -7,4 +7,17 @@ export const RegisterArea = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  .preImagesContent {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .preImages {
+    padding: 5px;
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+  }
 `;
