@@ -19,7 +19,6 @@ export default () => {
   const [slug, setSlug] = useState("");
 
   let date = Date.now().toString().substr(-4);
-
   const handlePhotos = (e) => {
     if (e.target.files) {
       for (let i = 0; i < e.target.files.length; i++) {
@@ -34,9 +33,11 @@ export default () => {
     } else {
       alert("Sem imagens");
     }
-    setSlug(e.target.files[0].name.replace(".jpg", ""));
   };
-
+  function setNomeFunction(e) {
+    setNome(e);
+    setSlug(e.replace(/\s/g, ""));
+  }
   async function handleRegister(e) {
     e.preventDefault();
     if (nome !== "") {
@@ -123,7 +124,7 @@ export default () => {
         <form onSubmit={handleRegister}>
           <input
             value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            onChange={(e) => setNomeFunction(e.target.value)}
             placeholder="Nome"
             type="text"
           />
