@@ -14,8 +14,8 @@ export default () => {
   const [banheiro, setBanheiro] = useState("");
   const [quartos, setQuartos] = useState("");
   const [tamanho, setTamanho] = useState("");
-  const [image, setImage] = useState(null);
-  const [showImage, setShowImage] = useState(null);
+  const [image, setImage] = useState(null); //storage
+  const [showImage, setShowImage] = useState(null); //mostrar na tela em url
   const [descricao, setDescricao] = useState("");
 
   const handlePhotos = (e) => {
@@ -30,7 +30,8 @@ export default () => {
 
   async function handleRegister(e) {
     e.preventDefault();
-    await firebase.storage().ref(`imagens/${image.name}`).put(image);
+    await firebase.storage().ref(`imagens/${image.name}`).put(image); //salvando imagem no storage
+    //criando link da imagem
     await firebase
       .storage()
       .ref("imagens")
