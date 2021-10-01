@@ -6,20 +6,23 @@ import Menu from "../../components/Menu";
 import Footer from "../../components/Footer";
 import Firebase from "../../firebaseConnection";
 import Formulario from "../../components/Formulario";
+import Houses from "../Houses";
 export default () => {
   const { id } = useParams();
   //const { register, handleSubmit, errors } = useForm();
   const [house, setHouse] = useState({});
+  const [imgs, setImgs] = useState([]);
 
   useEffect(() => {
     async function loadHouse() {
       await Firebase.firestore()
-        .collection("produtos")
+        .collection("testes")
         .doc(id)
         .get()
         .then((doc) => {
           console.log(doc);
           setHouse(doc.data());
+          setImgs(doc.data().images);
         })
         .catch((error) => {
           console.log(error);
@@ -48,7 +51,9 @@ export default () => {
               </a>
             </div>
             <div className="col-xl-8">
-              <img alt="" src={house.images} />
+              {imgs.map((item, k) => (
+                <img alt="" src={item} />
+              ))}
             </div>
           </div>
           <div className="descricao">

@@ -35,7 +35,7 @@ export default () => {
   async function loadHouses() {
     setAtivo(0);
     await Firebase.firestore()
-      .collection("produtos")
+      .collection("testes")
       .get()
       .then((snapshot) => {
         updateState(snapshot);
