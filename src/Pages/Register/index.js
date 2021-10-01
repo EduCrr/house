@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { RegisterArea } from "./style";
 import Menu from "../../components/Menu";
-//import { AuthContext } from "../../contexts/auth";
+import { AuthContext } from "../../contexts/auth";
 import firebase from "../../firebaseConnection";
 import Footer from "../../components/Footer";
 export default () => {
+  const { user } = useContext(AuthContext);
+
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
   const [cidade, setCidade] = useState("");
@@ -15,15 +17,52 @@ export default () => {
   const [tamanho, setTamanho] = useState("");
   const [image, setImage] = useState([]);
   const [descricao, setDescricao] = useState("");
+  let date = Date.now();
+  console.log(date);
   const handlePhotos = (e) => {
     for (let i = 0; i < e.target.files.length; i++) {
       setImage((image) => [...image, e.target.files[i]]);
     }
     console.log(image);
   };
-
-  const handleRegister = async (e) => {
-    e.preventDefault(); // prevent page refreshing
+  async function handleRegister(e) {
+    e.preventDefault();
+    if (image) {
+      await firebase
+        .firestore()
+        .collection("testes")
+        .doc(user.uid + date)
+        .set({
+          nome,
+          categoria,
+          preco,
+          cidade,
+          bairro,
+          banheiro,
+          quartos,
+          tamanho,
+          images: [],
+          descricao,
+        })
+        .then(() => {
+          setNome("");
+          setCategoria("");
+          setCidade("");
+          setPreco("");
+          setBairro("");
+          setBanheiro("");
+          setQuartos("");
+          setTamanho("");
+          setImage([]);
+          setDescricao("");
+          handleUploadStorage();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+  const handleUploadStorage = async () => {
     const promises = [];
     image.forEach((img) => {
       const uploadTask = firebase
@@ -48,32 +87,9 @@ export default () => {
           firebase
             .firestore()
             .collection("testes")
-            .add({
-              nome,
-              categoria,
-              preco,
-              cidade,
-              bairro,
-              banheiro,
-              quartos,
-              tamanho,
+            .doc(user.uid + date)
+            .update({
               images: firebase.firestore.FieldValue.arrayUnion(downloadURL),
-              descricao,
-            })
-            .then(() => {
-              setNome("");
-              setCategoria("");
-              setCidade("");
-              setPreco("");
-              setBairro("");
-              setBanheiro("");
-              setQuartos("");
-              setTamanho("");
-              setImage([]);
-              setDescricao("");
-            })
-            .catch((error) => {
-              console.log(error);
             });
         }
       );
