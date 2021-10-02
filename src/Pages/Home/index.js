@@ -15,21 +15,21 @@ export default () => {
       button: "Veja Mais",
       span: "Residencial",
       image: "/assets/houseSlider1.jpg",
-      link: "/house/ej8EIskahtCyJ6rSjwxQ",
+      link: "/house/aspen-mountain-0312",
     },
     {
-      title: "Paratehy Do Sul",
+      title: "Barra Norte",
       button: "Veja Mais",
       span: "Residencial",
-      image: "/assets/houseSlider2.jpg",
-      link: "/house/9VFPnkgIvvtWDPXuSEfC",
+      image: "/assets/barraNorte.jpg",
+      link: "/house/barra-norte-3930",
     },
     {
-      title: "Jardim Colinas",
+      title: "Água Verde",
       span: "Residencial",
       button: "Veja Mais",
-      image: "/assets/houseSlider3.jpg",
-      link: "/house/LdaWds0G1dC9XeIpV3yU",
+      image: "/assets/aguaverde.jpg",
+      link: "/house/agua-verde-3722",
     },
   ];
   useEffect(() => {
@@ -39,7 +39,7 @@ export default () => {
     <>
       <Menu ativo={true} />
       <SlideArea>
-        <Slider>
+        <Slider autoplay={4500}>
           {content.map((item, index) => (
             <div
               key={index}

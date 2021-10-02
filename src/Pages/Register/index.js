@@ -36,11 +36,29 @@ export default () => {
   };
   function setNomeFunction(e) {
     setNome(e);
-    setSlug(e.replace(/\s/g, ""));
+    setSlug(
+      e
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s])/g, "")
+        .split(" ")
+        .join("-")
+    );
   }
   async function handleRegister(e) {
     e.preventDefault();
-    if (nome !== "") {
+    if (
+      nome !== "" &&
+      preco !== "" &&
+      categoria !== "" &&
+      cidade !== "" &&
+      bairro !== "" &&
+      banheiro !== "" &&
+      quartos !== "" &&
+      tamanho !== "" &&
+      image === null &&
+      descricao !== ""
+    ) {
       await firebase
         .firestore()
         .collection("houses")
@@ -75,7 +93,7 @@ export default () => {
           console.log(error);
         });
     } else {
-      alert("preencha...");
+      alert("Todos os campos devem ser preenchidos!");
     }
   }
 
@@ -143,7 +161,7 @@ export default () => {
           <input
             value={categoria}
             onChange={(e) => setCategoria(e.target.value)}
-            placeholder="Categoria"
+            placeholder="Estado"
             type="text"
           />
           <input

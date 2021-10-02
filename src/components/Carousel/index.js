@@ -28,7 +28,7 @@ export default () => {
   useEffect(() => {
     async function loadHouses() {
       await Firebase.firestore()
-        .collection("produtos")
+        .collection("houses")
         .get()
         .then((snapshot) => {
           let lista = [];
@@ -73,7 +73,9 @@ export default () => {
                   </div>
                 </div>
               </Link>
-              <h3 style={{ marginLeft: "left" }}>{item.nome}</h3>
+              <h3 className="mt-4" style={{ marginLeft: "left" }}>
+                {item.nome}
+              </h3>
               <p>
                 <strong>Preço:</strong> {item.preco}
               </p>
