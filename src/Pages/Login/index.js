@@ -1,12 +1,13 @@
 import React, { useState, useContext } from "react";
 import { LoginArea } from "./style";
+import { Redirect } from "react-router";
 import Menu from "../../components/Menu";
 import { AuthContext } from "../../contexts/auth";
 export default () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  const { login } = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -16,7 +17,9 @@ export default () => {
       login(email, senha);
     }
   }
-
+  if (user) {
+    return <Redirect to="/admin/" />;
+  }
   return (
     <>
       <Menu />

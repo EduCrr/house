@@ -1,9 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { RegisterArea } from "./style";
 import Menu from "../../components/Menu";
 //import { AuthContext } from "../../contexts/auth";
 import firebase from "../../firebaseConnection";
 import Footer from "../../components/Footer";
+import { useHistory, useParams } from "react-router-dom";
 export default () => {
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
@@ -17,8 +18,12 @@ export default () => {
   const [url, setUrl] = useState([]);
   const [descricao, setDescricao] = useState("");
   const [slug, setSlug] = useState("");
+  const [idHouse, setIdHouse] = useState(false);
+  const { id } = useParams();
+  const history = useHistory();
 
   let date = Date.now().toString().substr(-4);
+
   const handlePhotos = (e) => {
     if (e.target.files) {
       for (let i = 0; i < e.target.files.length; i++) {
@@ -34,6 +39,7 @@ export default () => {
       alert("Sem imagens");
     }
   };
+
   function setNomeFunction(e) {
     setNome(e);
     setSlug(
@@ -45,8 +51,50 @@ export default () => {
         .join("-")
     );
   }
+
+  useEffect(() => {
+    if (id) {
+      loadId();
+    }
+  }, []);
+
   async function handleRegister(e) {
     e.preventDefault();
+    if (idHouse) {
+      await firebase.firestore().collection("houses").doc(id).update({
+        nome: nome,
+        preco: preco,
+        categoria: categoria,
+        cidade: cidade,
+        bairro: bairro,
+        banheiro: banheiro,
+        quartos: quartos,
+        tamanho: tamanho,
+        descricao: descricao,
+      });
+      handleUploadStorage(id)
+        .then(() => {
+          setNome("");
+          setCategoria("");
+          setCidade("");
+          setPreco("");
+          setBairro("");
+          setBanheiro("");
+          setQuartos("");
+          setTamanho("");
+          setImage([]);
+          setDescricao("");
+          setUrl([]);
+          alert("Casa editada com sucesso!");
+          history.push("/admin");
+        })
+        .catch((error) => {
+          console.log("Houve algum erro, tente atualizar mais tarde!");
+          console.log(error);
+        });
+      return;
+    }
+
     if (
       nome !== "" &&
       preco !== "" &&
@@ -56,7 +104,7 @@ export default () => {
       banheiro !== "" &&
       quartos !== "" &&
       tamanho !== "" &&
-      image === null &&
+      image.length > 0 &&
       descricao !== ""
     ) {
       await firebase
@@ -75,7 +123,7 @@ export default () => {
           images: [],
           descricao,
         });
-      handleUploadStorage()
+      handleUploadStorage(`${slug}-${date}`)
         .then(() => {
           setNome("");
           setCategoria("");
@@ -97,7 +145,7 @@ export default () => {
     }
   }
 
-  const handleUploadStorage = async () => {
+  const handleUploadStorage = async (id) => {
     const promises = [];
     image.forEach((img) => {
       const uploadTask = firebase
@@ -122,7 +170,7 @@ export default () => {
           firebase
             .firestore()
             .collection("houses")
-            .doc(`${slug}-${date}`)
+            .doc(id)
             .update({
               images: firebase.firestore.FieldValue.arrayUnion(downloadURL),
             });
@@ -134,6 +182,34 @@ export default () => {
       .catch((err) => console.log(err.code));
   };
 
+  async function loadId() {
+    await firebase
+      .firestore()
+      .collection("houses")
+      .doc(id)
+      .get()
+      .then((snapshot) => {
+        setNome(snapshot.data().nome);
+        setCategoria(snapshot.data().categoria);
+        setCidade(snapshot.data().cidade);
+        setPreco(snapshot.data().preco);
+        setBairro(snapshot.data().bairro);
+        setBanheiro(snapshot.data().banheiro);
+        setQuartos(snapshot.data().quartos);
+        setTamanho(snapshot.data().tamanho);
+        setUrl(snapshot.data().images);
+        setDescricao(snapshot.data().descricao);
+        setIdHouse(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIdHouse(false);
+      });
+  }
+  function handleDelete(item) {
+    alert(item);
+    return;
+  }
   return (
     <>
       <Menu />
@@ -201,6 +277,7 @@ export default () => {
               {url.map((item, k) => (
                 <>
                   <img className="preImages" key={k} alt="" src={item} />
+                  <button onClick={(e) => handleDelete(item)}>X</button>
                 </>
               ))}
             </div>

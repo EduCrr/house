@@ -7,21 +7,18 @@ import Register from "./Pages/Register";
 import Houses from "./Pages/Houses";
 import House from "./Pages/House";
 import Contato from "./Pages/Contato";
+import Admin from "./Pages/Admin";
 export default () => {
   let history = useHistory();
   let location = useLocation();
-  const { signed } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
-  if (signed) {
-    if (location.pathname === "/login") {
-      history.push("/register");
-    }
-  }
   let PrivateRoute = ({ children, ...rest }) => {
     return (
-      <Route {...rest}>{signed ? children : <Redirect to="/login" />}</Route>
+      <Route {...rest}>{user ? children : <Redirect to="/login" />}</Route>
     );
   };
+
   return (
     <>
       <Switch>
@@ -31,8 +28,14 @@ export default () => {
         <Route exact path="/login">
           <Login />
         </Route>
-        <PrivateRoute exact path="/register">
+        <PrivateRoute exact path="/admin/add/">
           <Register />
+        </PrivateRoute>
+        <PrivateRoute exact path="/admin/add/:id">
+          <Register />
+        </PrivateRoute>
+        <PrivateRoute exact path="/admin">
+          <Admin />
         </PrivateRoute>
         <Route exact path="/houses">
           <Houses />

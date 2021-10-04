@@ -4,7 +4,7 @@ import firebase from "../firebaseConnection";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  let [user, setUser] = useState(null);
 
   async function login(email, senha) {
     await firebase
@@ -27,6 +27,7 @@ function AuthProvider({ children }) {
       })
       .catch((error) => {
         console.log(error);
+        alert("email/senha incorretos!");
       });
   }
   function storageUser(data) {
