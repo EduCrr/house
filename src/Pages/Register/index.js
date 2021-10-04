@@ -28,7 +28,6 @@ export default () => {
     if (e.target.files) {
       for (let i = 0; i < e.target.files.length; i++) {
         setImage((image) => [...image, e.target.files[i]]);
-        console.log(e.target.files);
         const reader = new FileReader();
         reader.onload = (e) => {
           setUrl((image) => [...image, e.target.result]);
@@ -52,15 +51,59 @@ export default () => {
     );
   }
 
-  useEffect(() => {
-    if (id) {
-      loadId();
-    }
-  }, []);
-
   async function handleRegister(e) {
     e.preventDefault();
-    if (idHouse) {
+    if (idHouse === false) {
+      if (
+        nome !== "" &&
+        preco !== "" &&
+        categoria !== "" &&
+        cidade !== "" &&
+        bairro !== "" &&
+        banheiro !== "" &&
+        quartos !== "" &&
+        tamanho !== "" &&
+        image.length > 0 &&
+        descricao !== ""
+      ) {
+        await firebase
+          .firestore()
+          .collection("houses")
+          .doc(`${slug}-${date}`)
+          .set({
+            nome,
+            categoria,
+            preco,
+            cidade,
+            bairro,
+            banheiro,
+            quartos,
+            tamanho,
+            images: [],
+            descricao,
+          });
+        handleUploadStorage(`${slug}-${date}`)
+          .then(() => {
+            setNome("");
+            setCategoria("");
+            setCidade("");
+            setPreco("");
+            setBairro("");
+            setBanheiro("");
+            setQuartos("");
+            setTamanho("");
+            setImage([]);
+            setDescricao("");
+            setUrl([]);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        alert("Todos os campos devem ser preenchidos!");
+      }
+      return;
+    } else if (idHouse) {
       await firebase.firestore().collection("houses").doc(id).update({
         nome: nome,
         preco: preco,
@@ -85,7 +128,6 @@ export default () => {
           setImage([]);
           setDescricao("");
           setUrl([]);
-          alert("Casa editada com sucesso!");
           history.push("/admin");
         })
         .catch((error) => {
@@ -93,55 +135,6 @@ export default () => {
           console.log(error);
         });
       return;
-    }
-
-    if (
-      nome !== "" &&
-      preco !== "" &&
-      categoria !== "" &&
-      cidade !== "" &&
-      bairro !== "" &&
-      banheiro !== "" &&
-      quartos !== "" &&
-      tamanho !== "" &&
-      image.length > 0 &&
-      descricao !== ""
-    ) {
-      await firebase
-        .firestore()
-        .collection("houses")
-        .doc(`${slug}-${date}`)
-        .set({
-          nome,
-          categoria,
-          preco,
-          cidade,
-          bairro,
-          banheiro,
-          quartos,
-          tamanho,
-          images: [],
-          descricao,
-        });
-      handleUploadStorage(`${slug}-${date}`)
-        .then(() => {
-          setNome("");
-          setCategoria("");
-          setCidade("");
-          setPreco("");
-          setBairro("");
-          setBanheiro("");
-          setQuartos("");
-          setTamanho("");
-          setImage([]);
-          setDescricao("");
-          setUrl([]);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      alert("Todos os campos devem ser preenchidos!");
     }
   }
 
@@ -206,10 +199,36 @@ export default () => {
         setIdHouse(false);
       });
   }
-  function handleDelete(item) {
-    alert(item);
-    return;
+
+  async function handleDeleteUrl(item) {
+    await firebase
+      .firestore()
+      .collection("houses")
+      .doc(id)
+      .update({
+        images: firebase.firestore.FieldValue.arrayRemove(item),
+      });
   }
+
+  function handleDelete(item) {
+    let desertRef = firebase.storage().refFromURL(item);
+    desertRef
+      .delete()
+      .then(function () {
+        console.log("Deletado");
+      })
+      .catch(function (error) {
+        console.log("Não deletado" + error);
+      });
+    handleDeleteUrl(item);
+  }
+
+  useEffect(() => {
+    if (id) {
+      loadId();
+    }
+  }, []);
+
   return (
     <>
       <Menu />
@@ -276,8 +295,10 @@ export default () => {
             <div className="preImagesContent col-md-12">
               {url.map((item, k) => (
                 <>
-                  <img className="preImages" key={k} alt="" src={item} />
-                  <button onClick={(e) => handleDelete(item)}>X</button>
+                  <div key={k}>
+                    <img className="preImages" alt="" src={item} />
+                    {idHouse ? <a onClick={() => handleDelete(item)}>X</a> : ""}
+                  </div>
                 </>
               ))}
             </div>
@@ -287,10 +308,24 @@ export default () => {
             onChange={(e) => setDescricao(e.target.value)}
             placeholder="Descrição"
           ></textarea>
-          <button className="btnForm">Cadastrar</button>
+          <button className="btnForm">
+            {idHouse ? "Atualizar" : "Cadastrar"}
+          </button>
         </form>
       </RegisterArea>
       <Footer />
     </>
   );
 };
+
+/*
+    let desertRef = firebase.storage().refFromURL(item);
+    desertRef
+      .delete()
+      .then(function () {
+        console.log("Deletado");
+      })
+      .catch(function (error) {
+        console.log("Não deletado" + error);
+      });
+*/

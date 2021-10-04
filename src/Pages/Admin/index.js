@@ -97,25 +97,3 @@ export default () => {
     </>
   );
 };
-
-/*
-  await firebase
-      .firestore()
-      .collection("houses")
-      .doc(id)
-      .delete()
-      .then(() => {
-        alert("Casa removida com sucesso!");
-      });
-      var desertRef = storageRef.child(`images/${img}`);
-
-      // Delete the file
-      desertRef
-        .delete()
-        .then(function () {
-          // File deleted successfully
-        })
-        .catch(function (error) {
-          // Uh-oh, an error occurred!
-        });
-*/
