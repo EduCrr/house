@@ -59,4 +59,16 @@ export const HouseArea = styled.div`
       height: 40px;
     }
   }
+  @media (max-width: 570px) {
+    flex-direction: column;
+    .imgHouse {
+      flex-direction: column;
+      img {
+        margin-bottom: 20px;
+      }
+    }
+    .btns {
+      margin-top: 20px;
+    }
+  }
 `;

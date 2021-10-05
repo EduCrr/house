@@ -35,7 +35,7 @@ export default () => {
         });
     }
     loadHouse();
-  }, []);
+  }, [handleDelete]);
 
   async function handleDelete(id, img) {
     await firebase

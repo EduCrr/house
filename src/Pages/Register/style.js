@@ -20,4 +20,16 @@ export const RegisterArea = styled.div`
     width: 200px;
     object-fit: cover;
   }
+  .areImgs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    a {
+      margin-top: 5px;
+      cursor: pointer;
+    }
+  }
 `;

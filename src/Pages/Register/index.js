@@ -5,6 +5,8 @@ import Menu from "../../components/Menu";
 import firebase from "../../firebaseConnection";
 import Footer from "../../components/Footer";
 import { useHistory, useParams } from "react-router-dom";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 export default () => {
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
@@ -176,28 +178,30 @@ export default () => {
   };
 
   async function loadId() {
-    await firebase
-      .firestore()
-      .collection("houses")
-      .doc(id)
-      .get()
-      .then((snapshot) => {
-        setNome(snapshot.data().nome);
-        setCategoria(snapshot.data().categoria);
-        setCidade(snapshot.data().cidade);
-        setPreco(snapshot.data().preco);
-        setBairro(snapshot.data().bairro);
-        setBanheiro(snapshot.data().banheiro);
-        setQuartos(snapshot.data().quartos);
-        setTamanho(snapshot.data().tamanho);
-        setUrl(snapshot.data().images);
-        setDescricao(snapshot.data().descricao);
-        setIdHouse(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        setIdHouse(false);
-      });
+    if (id) {
+      await firebase
+        .firestore()
+        .collection("houses")
+        .doc(id)
+        .get()
+        .then((snapshot) => {
+          setNome(snapshot.data().nome);
+          setCategoria(snapshot.data().categoria);
+          setCidade(snapshot.data().cidade);
+          setPreco(snapshot.data().preco);
+          setBairro(snapshot.data().bairro);
+          setBanheiro(snapshot.data().banheiro);
+          setQuartos(snapshot.data().quartos);
+          setTamanho(snapshot.data().tamanho);
+          setUrl(snapshot.data().images);
+          setDescricao(snapshot.data().descricao);
+          setIdHouse(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIdHouse(false);
+        });
+    }
   }
 
   async function handleDeleteUrl(item) {
@@ -210,8 +214,9 @@ export default () => {
       });
   }
 
-  function handleDelete(item) {
+  function handleDelete(item, k) {
     let desertRef = firebase.storage().refFromURL(item);
+
     desertRef
       .delete()
       .then(function () {
@@ -221,12 +226,12 @@ export default () => {
         console.log("Não deletado" + error);
       });
     handleDeleteUrl(item);
+
+    history.push(`/admin/add/${id}`);
   }
 
   useEffect(() => {
-    if (id) {
-      loadId();
-    }
+    loadId();
   }, []);
 
   return (
@@ -291,18 +296,24 @@ export default () => {
             accept="image/*"
             multiple
           />
-          {image !== null && (
-            <div className="preImagesContent col-md-12">
-              {url.map((item, k) => (
-                <>
-                  <div key={k}>
-                    <img className="preImages" alt="" src={item} />
-                    {idHouse ? <a onClick={() => handleDelete(item)}>X</a> : ""}
+          <div className="preImagesContent col-md-12">
+            {url.map((item, k) => (
+              <>
+                <div key={k}>
+                  <div className="areImgs">
+                    <img alt="" className="preImages" alt="" src={item} />
+                    {idHouse ? (
+                      <a onClick={() => handleDelete(item, k)}>
+                        <DeleteIcon style={{ color: "red" }} />
+                      </a>
+                    ) : (
+                      ""
+                    )}
                   </div>
-                </>
-              ))}
-            </div>
-          )}
+                </div>
+              </>
+            ))}
+          </div>
           <textarea
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
@@ -317,15 +328,3 @@ export default () => {
     </>
   );
 };
-
-/*
-    let desertRef = firebase.storage().refFromURL(item);
-    desertRef
-      .delete()
-      .then(function () {
-        console.log("Deletado");
-      })
-      .catch(function (error) {
-        console.log("Não deletado" + error);
-      });
-*/
