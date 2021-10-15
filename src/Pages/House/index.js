@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { HouseArea } from "./style";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Menu from "../../components/Menu";
 //import { useForm } from "react-hook-form";
 import Footer from "../../components/Footer";
@@ -62,6 +62,11 @@ export default () => {
         <div className="container">
           <div className="row">
             <div className="col-xl-4 mb-5">
+              <span>
+                <Link to="/">Home /</Link>
+                <Link to="/houses"> Casas / </Link>
+                {house.nome}
+              </span>
               <h3>{house.nome}</h3>
               <p className="mb-4">
                 {house.tamanho} || {house.preco}

@@ -44,8 +44,14 @@ function AuthProvider({ children }) {
     loadStorage();
   }, []);
 
+  async function signOut() {
+    await firebase.auth().signOut();
+    localStorage.removeItem("user");
+    alert("Até outra hora!");
+    setUser(null);
+  }
   return (
-    <AuthContext.Provider value={{ signed: !!user, login, user }}>
+    <AuthContext.Provider value={{ signed: !!user, login, user, signOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -139,7 +139,7 @@ export default () => {
       return;
     }
   }
-
+  //atualizar imagens
   const handleUploadStorage = async (id) => {
     const promises = [];
     image.forEach((img) => {
@@ -204,7 +204,9 @@ export default () => {
     }
   }
 
-  async function handleDeleteUrl(item) {
+  async function handleDelete(item) {
+    const index = url.filter((i) => i !== item);
+    setUrl(index);
     await firebase
       .firestore()
       .collection("houses")
@@ -212,9 +214,6 @@ export default () => {
       .update({
         images: firebase.firestore.FieldValue.arrayRemove(item),
       });
-  }
-
-  function handleDelete(item, k) {
     let desertRef = firebase.storage().refFromURL(item);
 
     desertRef
@@ -225,7 +224,6 @@ export default () => {
       .catch(function (error) {
         console.log("Não deletado" + error);
       });
-    handleDeleteUrl(item);
 
     history.push(`/admin/add/${id}`);
   }
@@ -303,7 +301,7 @@ export default () => {
                   <div className="areImgs">
                     <img alt="" className="preImages" alt="" src={item} />
                     {idHouse ? (
-                      <a onClick={() => handleDelete(item, k)}>
+                      <a onClick={() => handleDelete(item)}>
                         <DeleteIcon style={{ color: "red" }} />
                       </a>
                     ) : (

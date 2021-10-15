@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../contexts/auth";
 import { Link } from "react-router-dom";
 import { MenuArea, MenuLogo, MenuIcon, MenuContent } from "./style";
 export default ({ ativo }) => {
   const [menuScroll, setMenuScroll] = useState(false);
   const [menu, setMenu] = useState(false);
+  const { user, signOut } = useContext(AuthContext);
   function scrollDown() {
     if (window.scrollY === 0) {
       setMenuScroll(false);
@@ -62,6 +64,14 @@ export default ({ ativo }) => {
             <Link to="/">Home</Link>
             <Link to="/houses">Casas</Link>
             <Link to="/contact">Contato</Link>
+            {user && (
+              <>
+                <Link to="/admin">Admin</Link>
+                <Link to="/" onClick={() => signOut()}>
+                  Sair
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </MenuContent>
