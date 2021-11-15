@@ -1,6 +1,5 @@
 <p align="center">
 
-http://educhairs.epizy.com/
 </p>
 
 <div align="center">
