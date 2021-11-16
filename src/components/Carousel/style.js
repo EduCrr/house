@@ -7,11 +7,11 @@ export const CarrouselArea = styled.div`
   }
   .imgHover {
     position: relative;
-    width: 350px;
+    width: 100%;
     background-color: #000;
   }
   img {
-    width: 350px;
+    width: 100%;
     height: 350px;
     object-fit: cover;
     transition: 0.5s ease;
