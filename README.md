@@ -1,5 +1,7 @@
 <p align="center">
 http://eduhouse.epizy.com/
+
+Um site da web para visualizar casas e suas informações. Visualize casas por estados selecionados e uma área de login para o administrador ter acesso para editar, deletar e criar uma nova casa. Todos os dados vindo do Firebase.
 </p>
 
 <div align="center">
